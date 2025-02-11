@@ -5,10 +5,11 @@
 #include "pico/stdlib.h"
 #include "pico/time.h"
 
+//Sensor Data Buffer
+extern struct sensorData sensorBuffer[800];
+extern uint16_t BufferCounter;
 
-
-
-void mountSD();
+extern queue_t shareQueue;
 
 struct sensorData {
     float PM1voltage;
@@ -24,7 +25,8 @@ struct sensorData {
     float irradiance;
 };
 
+void mountSD();
+void initSDFile(struct tm date);
+void copySDBuffer();
 
-//Sensor Data Buffer
-extern struct sensorData sensorBuffer[800];
-extern uint16_t BufferCounter;
+

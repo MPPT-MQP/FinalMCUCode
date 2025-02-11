@@ -87,28 +87,28 @@ int main()
         sensorBuffer[BufferCounter].PM2voltage = PM_readVoltage(PM2);
         sensorBuffer[BufferCounter].PM2current = PM_readCurrent(PM2);
 
-        // sensorBuffer[BufferCounter].PM3voltage = PM_readVoltage(PM3);
-        // sensorBuffer[BufferCounter].PM3current = PM_readCurrent(PM3);
+        sensorBuffer[BufferCounter].PM3voltage = PM_readVoltage(PM3);
+        sensorBuffer[BufferCounter].PM3current = PM_readCurrent(PM3);
 
-        // //Temperature
-        // sensorBuffer[BufferCounter].temperature = readTempature(2, 5);
+        //Temperature
+        sensorBuffer[BufferCounter].temperature = readTempature(2, 5);
         
         //Irradiance
-        // sensorBuffer[BufferCounter].irradiance = readExtADC();
-        // Returns irradance converted voltage value
+        sensorBuffer[BufferCounter].irradiance = readExtADC();
+        //Returns irradance converted voltage value
 
 
-        // //Write inital header data below
-        printf("\nTimestamp, PM1 (V), PM1(I), PM1(W), PM2 (V), PM2(I), PM2(W), PM3 (V), PM3(I), PM3(W), Temp (C), Light (W/m^2)");
+        // // //Write inital header data below
+        // printf("\nTimestamp, PM1 (V), PM1(I), PM1(W), PM2 (V), PM2(I), PM2(W), PM3 (V), PM3(I), PM3(W), Temp (C), Light (W/m^2)");
         
-        //Write row data
-        printf("\nTIME, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f", 
-        sensorBuffer[BufferCounter].PM1voltage, sensorBuffer[BufferCounter].PM1current, sensorBuffer[BufferCounter].PM1power, 
-        sensorBuffer[BufferCounter].PM2voltage, sensorBuffer[BufferCounter].PM2current, sensorBuffer[BufferCounter].PM2power, sensorBuffer[BufferCounter].PM3voltage, 
-        sensorBuffer[BufferCounter].PM3current, sensorBuffer[BufferCounter].PM3power, sensorBuffer[BufferCounter].temperature, sensorBuffer[BufferCounter].irradiance);
+        // //Write row data
+        // printf("\nTIME, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f", 
+        // sensorBuffer[BufferCounter].PM1voltage, sensorBuffer[BufferCounter].PM1current, sensorBuffer[BufferCounter].PM1power, 
+        // sensorBuffer[BufferCounter].PM2voltage, sensorBuffer[BufferCounter].PM2current, sensorBuffer[BufferCounter].PM2power, sensorBuffer[BufferCounter].PM3voltage, 
+        // sensorBuffer[BufferCounter].PM3current, sensorBuffer[BufferCounter].PM3power, sensorBuffer[BufferCounter].temperature, sensorBuffer[BufferCounter].irradiance);
 
         //Sprintf to format the data
-        char formatString[32];
+        char formatString[64];
         aon_timer_get_time(&time);
         sprintf(&formatString, "%02d:%02d:%02d, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f", 
         time.tm_hour, time.tm_min, time.tm_sec,
@@ -116,9 +116,10 @@ int main()
         sensorBuffer[BufferCounter].PM2voltage, sensorBuffer[BufferCounter].PM2current, sensorBuffer[BufferCounter].PM2power, sensorBuffer[BufferCounter].PM3voltage, 
         sensorBuffer[BufferCounter].PM3current, sensorBuffer[BufferCounter].PM3power, sensorBuffer[BufferCounter].temperature, sensorBuffer[BufferCounter].irradiance);
 
+        //Returns false if the queue is full
         queue_try_add(&shareQueue, &formatString);
 
-        if(BufferCounter++ > 800){
+        if(BufferCounter++ > 20){
             BufferCounter = 0;
         }
         /*End sensor loop*/
