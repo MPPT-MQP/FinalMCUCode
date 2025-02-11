@@ -60,11 +60,11 @@ int main()
     // //Setup External ADC (ADS1115)
     configExtADC((((((((CONFIG_DEFAULT & ~CONFIG_MUX_MASK) | CONFIG_MUX_AIN0_GND) & ~CONFIG_PGA_MASK) | CONFIG_PGA_4p096V) & ~CONFIG_MODE_MASK) | CONFIG_MODE_CONT) & ~CONFIG_DR_MASK) | CONFIG_DR_475SPS);
     
-    // //Init Queue (NEED TO TEST)
-    // queue_t shareQueue;
-    // queue_init(&shareQueue, 32, 10);
-    // aon_timer_start_with_timeofday();
-    // struct tm time;
+    //Init Queue (NEED TO TEST)
+    queue_t shareQueue;
+    queue_init(&shareQueue, 32, 10);
+    aon_timer_start_with_timeofday();
+    struct tm time;
 
     //set enable pin high
     gpio_init(27);
@@ -107,16 +107,16 @@ int main()
         sensorBuffer[BufferCounter].PM2voltage, sensorBuffer[BufferCounter].PM2current, sensorBuffer[BufferCounter].PM2power, sensorBuffer[BufferCounter].PM3voltage, 
         sensorBuffer[BufferCounter].PM3current, sensorBuffer[BufferCounter].PM3power, sensorBuffer[BufferCounter].temperature, sensorBuffer[BufferCounter].irradiance);
 
-        // //Sprintf to format the data
-        // char formatString[32];
-        // aon_timer_get_time(&time);
-        // sprintf(&formatString, "%02d:%02d:%02d, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f", 
-        // time.tm_hour, time.tm_min, time.tm_sec,
-        // sensorBuffer[BufferCounter].PM1voltage, sensorBuffer[BufferCounter].PM1current, sensorBuffer[BufferCounter].PM1power, 
-        // sensorBuffer[BufferCounter].PM2voltage, sensorBuffer[BufferCounter].PM2current, sensorBuffer[BufferCounter].PM2power, sensorBuffer[BufferCounter].PM3voltage, 
-        // sensorBuffer[BufferCounter].PM3current, sensorBuffer[BufferCounter].PM3power, sensorBuffer[BufferCounter].temperature, sensorBuffer[BufferCounter].irradiance);
+        //Sprintf to format the data
+        char formatString[32];
+        aon_timer_get_time(&time);
+        sprintf(&formatString, "%02d:%02d:%02d, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f", 
+        time.tm_hour, time.tm_min, time.tm_sec,
+        sensorBuffer[BufferCounter].PM1voltage, sensorBuffer[BufferCounter].PM1current, sensorBuffer[BufferCounter].PM1power, 
+        sensorBuffer[BufferCounter].PM2voltage, sensorBuffer[BufferCounter].PM2current, sensorBuffer[BufferCounter].PM2power, sensorBuffer[BufferCounter].PM3voltage, 
+        sensorBuffer[BufferCounter].PM3current, sensorBuffer[BufferCounter].PM3power, sensorBuffer[BufferCounter].temperature, sensorBuffer[BufferCounter].irradiance);
 
-        // queue_try_add(&shareQueue, &formatString);
+        queue_try_add(&shareQueue, &formatString);
 
         if(BufferCounter++ > 800){
             BufferCounter = 0;
